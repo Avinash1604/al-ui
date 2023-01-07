@@ -1,0 +1,173 @@
+<div class="px-10">
+  <h5 class="font-bold my-2">Details</h5>
+  <form [formGroup]="fg" (ngSubmit)="onSubmit()">
+    <div formGroupName="address" class="my-6">
+      <h4 class="uppercase font-bold text-lg">Address</h4>
+        <div class="w-full">
+          <label Class="w-full text-md font-light"
+            >Address
+            <div class="pt-2 flex items-center">
+              <input
+                type="text"
+                formControlName="lineOne"
+                class="border border-grey-600 w-full h-10 py-2 px-4 text-sm rounded"
+                placeholder="Enter address line one"
+                [ngClass]="{
+                  'border-red-800': message && message.lineOne
+                }"
+              />
+            </div>
+            <span
+              class="text-sm text-red-800"
+              *ngIf="message && message.lineOne"
+            >
+              {{ message && message.lineOne }}
+            </span>
+          </label>
+        </div>
+      <div class="w-full">
+        <label Class="w-full text-md font-light"
+          >City
+          <div class="pt-2 flex items-center">
+            <input
+              type="text"
+              formControlName="city"
+              class="border border-grey-600 w-full h-10 py-2 px-4 text-sm rounded"
+              placeholder="City"
+              [ngClass]="{
+                'border-red-800': message && message.city
+              }"
+            />
+          </div>
+          <span class="text-sm text-red-800" *ngIf="message && message.city">
+            {{ message.city }}
+          </span>
+        </label>
+      </div>
+      <div class="w-full">
+        <label Class="w-full text-md font-light"
+          >State
+          <div class="pt-2 flex items-center">
+            <input
+              type="text"
+              formControlName="state"
+              class="border border-grey-600 w-full h-10 py-2 px-4 text-sm rounded"
+              placeholder="State"
+              [ngClass]="{
+                'border-red-800': message && message.state
+              }"
+            />
+          </div>
+          <span class="text-sm text-red-800" *ngIf="message && message.state">
+            {{ message.state }}
+          </span>
+        </label>
+      </div>
+      <div class="w-full">
+        <label Class="w-full text-md font-light"
+          >Country
+          <div class="pt-2 flex items-center">
+            <input
+              type="text"
+              formControlName="country"
+              class="border border-grey-600 w-full h-10 py-2 px-4 text-sm rounded"
+              placeholder="Country"
+              [ngClass]="{
+                'border-red-800': message && message.country
+              }"
+            />
+          </div>
+          <span class="text-sm text-red-800" *ngIf="message && message.country">
+            {{ message.country }}
+          </span>
+        </label>
+      </div>
+      <div class="w-full">
+        <label Class="w-full text-md font-light"
+          >Zipcode
+          <div class="pt-2 flex items-center">
+            <input
+              type="text"
+              formControlName="zipcode"
+              class="border border-grey-600 w-full h-10 py-2 px-4 text-sm rounded"
+              placeholder="zipCode"
+              [ngClass]="{
+                'border-red-800': message && message.zipCode
+              }"
+            />
+          </div>
+          <span class="text-sm text-red-800" *ngIf="message && message.country">
+            {{ message.country }}
+          </span>
+        </label>
+      </div>
+    </div>
+    <div formGroupName="service" class="my-6">
+      <h4 class="uppercase font-bold text-lg">Service</h4>
+      <div class="w-full">
+        <label Class="w-full text-md font-light"
+          >Service Name
+          <div class="pt-2 flex items-center">
+            <input
+              type="text"
+              formControlName="serviceName"
+              class="border border-grey-600 w-full h-10 py-2 px-4 text-sm rounded"
+              placeholder="Service Name"
+              [ngClass]="{
+                'border-red-800': message && message.service
+              }"
+            />
+          </div>
+          <span class="text-sm text-red-800" *ngIf="message && message.country">
+            {{ message.country }}
+          </span>
+        </label>
+      </div>
+    </div>
+    <div formGroupName="insurenceProviders" class="my-6">
+      <h4 class="uppercase font-bold text-lg">Insurence Providers</h4>
+      <div class="w-full">
+        <label Class="w-full text-md font-light"
+          >Provider
+          <div class="pt-2 flex items-center">
+            <input
+              type="text"
+              formControlName="iProviders"
+              class="border border-grey-600 w-full h-10 py-2 px-4 text-sm rounded"
+              placeholder="Insurence Providers"
+              [ngClass]="{
+                'border-red-800': message && message.iProvider
+              }"
+            />
+          </div>
+          <span class="text-sm text-red-800" *ngIf="message && message.iProvider">
+            {{ message.city }}
+          </span>
+        </label>
+      </div>
+    </div>
+    <div class="mt-10">
+      <button
+        type="submit"
+        [ngClass]="{'opacity-50': !fg.valid }"
+        class="bg-blue-600 p-2 text-white rounded w-32"
+        [disabled]="!fg.valid"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</div>
+
+
+<div style="margin: 20px;">
+  <button style="width: 100px; height: 40px;" (click)="clear()" class="bg-blue-600 p-2 text-white rounded w-32">
+      Clear
+  </button>
+</div>
+<div style="border: 1px solid; margin: 20px;" *ngIf="responseCity" [innerHTML]="responseCity"></div>
+<div style="border: 1px solid; margin: 20px;" *ngIf="responseState" [innerHTML]="responseState"></div>
+<div style="border: 1px solid; margin: 20px;" *ngIf="responseCountry" [innerHTML]="responseCountry"></div>
+<div style="border: 1px solid; margin: 20px;" *ngIf="responseZipcode" [innerHTML]="responseZipcode"></div>
+<div style="border: 1px solid; margin: 20px;" *ngIf="responseService" [innerHTML]="responseService"></div>
+<div style="border: 1px solid; margin: 20px;" *ngIf="responseInsurance" [innerHTML]="responseInsurance"></div>

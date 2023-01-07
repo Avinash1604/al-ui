@@ -1,0 +1,51 @@
+<div class="px-10">
+    <h2><b>Address</b></h2>
+    <div>{{businessData?.address?.city}}</div>
+    <div>{{businessData?.address?.state}}</div>
+    <div>{{businessData?.address?.country}}</div>
+    <div>{{businessData?.address?.zipcode}}</div>
+    <h2><b>Service</b></h2>
+    <div>{{businessData?.service?.serviceName}}</div>
+    <h2><b>Insurence Providers</b></h2>
+    <div>{{businessData?.insurenceProviders?.iProviders}}</div>
+
+    <form [formGroup]="fg" (ngSubmit)="onSubmit()">
+        <h4 class="uppercase font-bold text-lg">Input</h4>
+        <div class="w-full">
+            <label Class="w-full text-md font-light">Searching About</label>
+            <div class="pt-2 flex items-center">
+                <select id="search" formControlName="keyword" style="border: 2px solid black;">
+                    <option *ngFor="let searchKeyWord of searchKeyWords" [ngValue]="searchKeyWord.key">{{
+                        searchKeyWord.value }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="w-full">
+            <label Class="w-full text-md font-light">Input
+                <div class="pt-2 flex items-center">
+                    <input type="text" formControlName="text"
+                        class="border border-grey-600 w-full h-10 py-2 px-4 text-sm rounded" placeholder="text" />
+                </div>
+            </label>
+        </div>
+        <div class="mt-10">
+            <button type="submit" [ngClass]="{'opacity-50': !fg.valid }" class="bg-blue-600 p-2 text-white rounded w-32"
+                [disabled]="!fg.valid">
+                Submit
+            </button>
+            <div class="loader" *ngIf="loading"></div>
+        </div>
+    </form>
+
+    <div style="margin: 20px;" *ngIf="response">
+        <button style="width: 100px; height: 40px;" (click)="clear()" class="bg-blue-600 p-2 text-white rounded w-32">
+            Clear
+        </button>
+        <div style="margin: 10px;">
+            <b>{{searchedTitle}}</b>
+        </div>
+    </div>
+    <div style="border: 1px solid; margin: 20px;" *ngIf="response" [innerHTML]="response">
+    </div>
+
+</div>
