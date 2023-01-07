@@ -14,6 +14,13 @@ export class AiIntegratorComponent implements OnInit {
   businessData: any = {};
   fg!: FormGroup;
   response: string = '';
+  responseCity: string = '';
+  responseCountry: string = '';
+  responseState: string = '';
+  responseService: string = '';
+  responseInsurance: string = '';
+
+
   loading = false;
   searchedTitle = '';
   searchKeyWords = [
