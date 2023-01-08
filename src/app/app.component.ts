@@ -22,6 +22,12 @@ export class AppComponent implements OnInit {
   responseInsurance: string = '';
   responseZipcode: string = '';
   loading = false;
+  loadingCity = false;
+  loadingCountry = false;
+  loadingState = false;
+  loadingService = false;
+  loadingInsurance = false;
+  loadingZipcode = false;
 
   title = 'al-ui';
 	fg!: FormGroup;
@@ -147,7 +153,7 @@ export class AppComponent implements OnInit {
 
     const data = {"text":searchedTitle}
     var config = {
-      url: 'http://localhost:3000/ai/stream',
+      url: 'http://18.191.47.199:3000/ai/stream',
       method: 'POST',
       body: data,
       cached: false,
@@ -168,11 +174,11 @@ export class AppComponent implements OnInit {
   }
 
   getCountryOutput(searchedTitle: any) {
-    this.loading = true;
+    this.loadingCountry = true;
 
     const data = {"text":searchedTitle}
     var config = {
-      url: 'http://localhost:3000/ai/stream',
+      url: 'http://18.191.47.199:3000/ai/stream',
       method: 'POST',
       body: data,
       cached: false,
@@ -180,28 +186,28 @@ export class AppComponent implements OnInit {
     const oboeService = oboe(config);
     oboeService
       .node('!', (data: any) => {
-        this.loading = false;
+        this.loadingCountry = false;
         console.log(data);
         this.responseCountry = this.responseCountry + data['data']?.replace(new RegExp('\n', 'g'), "<br />");
       })
       .done( (data: any) => {
         console.log('-------------------DONE---------------------');
-        this.loading = false;
+        this.loadingCountry = false;
         console.log(data);
       })
       .fail( (data: any) => {
         console.log('-------------------FAIL---------------------');
         console.log(data);
-        this.loading = false;
+        this.loadingCountry = false;
       });
   }
 
   getZiocodeOutput(searchedTitle: any) {
-    this.loading = true;
+    this.loadingZipcode = true;
 
     const data = {"text":searchedTitle}
     var config = {
-      url: 'http://localhost:3000/ai/stream',
+      url: 'http://18.191.47.199:3000/ai/stream',
       method: 'POST',
       body: data,
       cached: false,
@@ -209,29 +215,29 @@ export class AppComponent implements OnInit {
     const oboeService = oboe(config);
     oboeService
       .node('!', (data: any) => {
-        this.loading = false;
+        this.loadingZipcode = false;
         console.log(data);
         this.responseZipcode = this.responseZipcode + data['data']?.replace(new RegExp('\n', 'g'), "<br />");
       })
       .done( (data: any) => {
         console.log('-------------------DONE---------------------');
-        this.loading = false;
+        this.loadingZipcode = false;
         console.log(data);
       })
       .fail( (data: any) => {
         console.log('-------------------FAIL---------------------');
         console.log(data);
-        this.loading = false;
+        this.loadingZipcode = false;
       });
   }
 
 
   getStateOutput(searchedTitle: any) {
-    this.loading = true;
+    this.loadingState = true;
 
     const data = {"text":searchedTitle}
     var config = {
-      url: 'http://localhost:3000/ai/stream',
+      url: 'http://18.191.47.199:3000/ai/stream',
       method: 'POST',
       body: data,
       cached: false,
@@ -239,15 +245,18 @@ export class AppComponent implements OnInit {
     const oboeService = oboe(config);
     oboeService
       .node('!', (data: any) => {
+        this.loadingState = false
         console.log(data);
         this.responseState = this.responseState + data['data']?.replace(new RegExp('\n', 'g'), "<br />");
       })
       .done( (data: any) => {
+        this.loadingState = false
         console.log('-------------------DONE---------------------');
         this.loading = false;
         console.log(data);
       })
       .fail( (data: any) => {
+        this.loadingState = false
         console.log('-------------------FAIL---------------------');
         console.log(data);
         this.loading = false;
@@ -255,11 +264,11 @@ export class AppComponent implements OnInit {
   }
 
   getServiceOutput(searchedTitle: any) {
-    this.loading = true;
+    this.loadingService = true;
 
     const data = {"text":searchedTitle}
     var config = {
-      url: 'http://localhost:3000/ai/stream',
+      url: 'http://18.191.47.199:3000/ai/stream',
       method: 'POST',
       body: data,
       cached: false,
@@ -268,27 +277,28 @@ export class AppComponent implements OnInit {
     oboeService
       .node('!', (data: any) => {
         console.log(data);
+        this.loadingService = false;
         this.responseService = this.responseService + data['data']?.replace(new RegExp('\n', 'g'), "<br />");
       })
       .done( (data: any) => {
         console.log('-------------------DONE---------------------');
-        this.loading = false;
+        this.loadingService = false;
         console.log(data);
       })
       .fail( (data: any) => {
         console.log('-------------------FAIL---------------------');
         console.log(data);
-        this.loading = false;
+        this.loadingService = false;
       });
   }
 
 
   getInsuranceOutput(searchedTitle: any) {
-    this.loading = true;
+    this.loadingInsurance = true;
 
     const data = {"text":searchedTitle}
     var config = {
-      url: 'http://localhost:3000/ai/stream',
+      url: 'http://18.191.47.199:3000/ai/stream',
       method: 'POST',
       body: data,
       cached: false,
@@ -296,18 +306,19 @@ export class AppComponent implements OnInit {
     const oboeService = oboe(config);
     oboeService
       .node('!', (data: any) => {
+        this.loadingInsurance = false;
         console.log(data);
         this.responseInsurance = this.responseInsurance + data['data']?.replace(new RegExp('\n', 'g'), "<br />");
       })
       .done( (data: any) => {
         console.log('-------------------DONE---------------------');
-        this.loading = false;
+        this.loadingInsurance = false;
         console.log(data);
       })
       .fail( (data: any) => {
         console.log('-------------------FAIL---------------------');
         console.log(data);
-        this.loading = false;
+        this.loadingInsurance = false;
       });
   }
 
