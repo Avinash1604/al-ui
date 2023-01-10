@@ -158,15 +158,17 @@
       <div class="loader" *ngIf="loading"></div>
     </div>
   </form>
+  <button (click)="gotoQuestionnair()" class="bg-blue-600 p-2 text-white rounded w-32" style="margin-top: 10px; margin-right: 10px;">
+    Questionnair 
+</button>
   <button (click)="clear()" class="bg-blue-600 p-2 text-white rounded w-32" style="margin-top: 10px;">
     Clear
 </button>
+
 </div>
 
 
-<div style="border: 1px solid; margin: 20px;" *ngIf="responseCity" [innerHTML]="responseCity"></div>
-<div style="border: 1px solid; margin: 20px;" *ngIf="responseState" [innerHTML]="responseState"></div>
-<div style="border: 1px solid; margin: 20px;" *ngIf="responseCountry" [innerHTML]="responseCountry"></div>
-<div style="border: 1px solid; margin: 20px;" *ngIf="responseZipcode" [innerHTML]="responseZipcode"></div>
-<div style="border: 1px solid; margin: 20px;" *ngIf="responseService" [innerHTML]="responseService"></div>
-<div style="border: 1px solid; margin: 20px;" *ngIf="responseInsurance" [innerHTML]="responseInsurance"></div>
+<div *ngFor="let data of finalSubmitData">
+  <div style="border: 1px solid; margin: 20px;" *ngIf="data?.alData" [innerHTML]="data?.alData">
+  </div>
+</div>

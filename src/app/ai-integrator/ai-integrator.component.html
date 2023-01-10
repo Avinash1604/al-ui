@@ -1,46 +1,44 @@
 <div class="px-10">
-    <!-- <h2><b>Address</b></h2>
-    <div>{{businessData?.address?.city}}</div>
-    <div>{{businessData?.address?.state}}</div>
-    <div>{{businessData?.address?.country}}</div>
-    <div>{{businessData?.address?.zipcode}}</div>
-    <h2><b>Service</b></h2>
-    <div>{{businessData?.service?.serviceName}}</div>
-    <h2><b>Insurence Providers</b></h2>
-    <div>{{businessData?.insurenceProviders?.iProviders}}</div> -->
+    <h2><b> Questionnairs (address, city, state, country, zipcode, service, insurance)</b></h2>
 
     <form [formGroup]="fg">
-        <div class="w-full" formArrayName="questionnairs" *ngFor="let control of  questionairFieldAsFormArray.controls; let i = index;" >
+        <div class="w-full" formArrayName="questionnairs"
+            *ngFor="let control of  questionairFieldAsFormArray.controls; let i = index;">
             <label Class="w-full text-md font-light">
-                Questionnair
-                <div class="pt-2 flex items-center" [formGroupName]="i" >
+                <div class="pt-2 flex items-center" [formGroupName]="i">
                     <input type="text" formControlName="questionnair"
-                        class="border border-grey-600 h-10 py-2 px-4 text-sm rounded" style="width: 90%;" placeholder="text" />
-                        <button class="button remove-btn" type="button" (click)="removeField(i)" >Remove</button>
+                        class="border border-grey-600 h-10 py-2 px-4 text-sm rounded" style="width: 90%;"
+                        placeholder="text" />
+                    <button class="button remove-btn" type="button" (click)="removeField(i)">Remove</button>
                 </div>
             </label>
         </div>
     </form>
-        <div class="mt-10">
-            <button  class="button" (click)="addControl()" class="bg-blue-600 p-2 text-white rounded w-32 mr-5"> + Questionnair</button>
-            <button type="submit" [ngClass]="{'opacity-50': !fg.valid }" class="bg-blue-600 p-2 text-white rounded w-32"
-                [disabled]="!fg.valid" (click)="onSubmit()">
-                Submit
-            </button>
-            <div class="loader" *ngIf="loading"></div>
-        </div>
+    <div class="mt-10">
+        <button class="button" (click)="addControl()" class="bg-blue-600 p-2 text-white rounded w-32 mr-5"> +
+            Questionnair</button>
+        <button type="submit" [ngClass]="{'opacity-50': !fg.valid }" class="bg-blue-600 p-2 text-white rounded w-32 mr-5"
+            [disabled]="!fg.valid" (click)="onSubmit()">
+            Save
+        </button>
+        <button type="submit" [ngClass]="{'opacity-50': !fg.valid }" class="bg-blue-600 p-2 text-white rounded w-32"
+            [disabled]="!fg.valid" (click)="close()">
+            close
+        </button>
+        <div class="loader" *ngIf="loading"></div>
+    </div>
 
 
     <div style="margin-top: 20px;">
-        <button style="width: 100px; height: 40px;" (click)="clear()" class="bg-blue-600 p-2 text-white rounded w-32">
+        <!-- <button style="width: 100px; height: 40px;" (click)="clear()" class="bg-blue-600 p-2 text-white rounded w-32">
             Clear
         </button>
         <div style="margin: 10px;">
             <b>{{searchedTitle}}</b>
-        </div>
+        </div> -->
     </div>
     <div *ngFor="let data of finalSubmitData">
-    <div style="border: 1px solid; margin: 20px;" *ngIf="data?.alData" [innerHTML]="data?.alData">
-    </div>
+        <div style="border: 1px solid; margin: 20px;" *ngIf="data?.alData" [innerHTML]="data?.alData">
+        </div>
     </div>
 </div>

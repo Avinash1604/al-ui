@@ -29,6 +29,8 @@ export class AppComponent implements OnInit {
   loadingInsurance = false;
   loadingZipcode = false;
 
+  finalSubmitData: any[] = [];
+
   title = 'al-ui';
 	fg!: FormGroup;
   message: any = {};
@@ -84,21 +86,30 @@ export class AppComponent implements OnInit {
         insurance: ['', Validators.required],
       }),
     });
+    this.setQuestionnair();
   }
 
   ngAfterViewInit(): void {
-    // const addBlurs: Observable<
-    //   any
-    // >[] = this.formControls.map((formControl: ElementRef) =>
-    //   fromEvent(formControl.nativeElement, 'blur')
-    // );
-    // merge(this.fg.valueChanges, ...addBlurs)
-    //   .pipe(debounceTime(500))
-    //   .subscribe((value) => {
-    //     this.message = this.invalidInputs(
-    //       this.fg
-    //     );
-    //   });
+
+  }
+
+  setQuestionnair() {
+    if(!localStorage.getItem("questionnairs")) {
+      const questionairs  = [{
+        "questionnair" : "tell about {city}"
+      },{
+        "questionnair" : "tell about {state}"
+      },{
+        "questionnair" : "tell about {country}"
+      },{
+        "questionnair" : "tell about {zipcode}"
+      },{
+        "questionnair" : "tell about {service}"
+      },{
+        "questionnair" : "tell about {insurance}"
+      }]
+      localStorage.setItem('questionairs', JSON.stringify(questionairs))
+    }
   }
 
   invalidInputs(formgroup: FormGroup): { [key: string]: string } {
@@ -127,55 +138,113 @@ export class AppComponent implements OnInit {
 
 
   onSubmit() {
-     console.log(this.fg.value);
-     const data = Object.assign({}, this.fg.value.address, this.fg.value.service, this.fg.value.insurenceProviders)
-     localStorage.setItem('formData', JSON.stringify(data));
+    console.log(this.fg.value);
+    const formData = Object.assign({}, this.fg.value.address, this.fg.value.service, this.fg.value.insurenceProviders)
+    this.loading = true;
+    const data = localStorage.getItem("questionnairs");
+    this.finalSubmitData = JSON.parse(data ? data : "");
+    this.finalSubmitData = this.finalSubmitData.map((data) =>
+      this.replaceDynamicValue(data, formData)
+    );
+    console.log(this.finalSubmitData);
 
-     this.router.navigate(["ai-integrator"])
-    // this.loading = true;
-    // const title = "Tell me about "+this.fg.value.address.city
-    // this.alServiceService.getAiStream(title, this.callBackUpdateCity, "city")
-    // this.alServiceService.getAiStream("Tell me about "+this.fg.value.address.state, this.callBackUpdateCity, "state")
-    // this.alServiceService.getAiStream( "Tell me about "+this.fg.value.address.country, this.callBackUpdateCity, "country")
-    // this.alServiceService.getAiStream( "Tell me about "+this.fg.value.address.zipcode, this.callBackUpdateCity, "zipcode")
-    // this.alServiceService.getAiStream( "Tell me about "+this.fg.value.service.service, this.callBackUpdateCity, "service")
-    // this.alServiceService.getAiStream( "Tell me about "+this.fg.value.insurenceProviders.insurance, this.callBackUpdateCity, "insurance")
+    this.finalSubmitData.forEach((data: any, index: any) => {
+      this.alServiceService.getAiStream(
+        data.questionnair,
+        this.callBackUpdate,
+        data.questionnair
+      );
+    });
+
   }
 
-  callBackUpdateCity = (data: any, type: any) => {
+  callBackUpdate = (data: any, type: any) => {
     this.loading = false;
+    this.updateArray(data, type);
+  };
 
-    if(type == "city") {
-      this.responseCity = this.responseCity + data;
-    }
+  updateArray(response: any, value: any) {
+    this.finalSubmitData = this.finalSubmitData.map((data) => {
+      if (data.questionnair == value) {
+        let exitsingData = data["alData"];
+        if(exitsingData) {
+          data["alData"] = exitsingData+response;
+        } else{
+          data["alData"] = response;
+        }
+      }
+      return data;
+    });
+  }
 
-    if(type == "state") {
-      this.responseState = this.responseState + data;
-    }
-
-    if(type == "country") {
-      this.responseCountry = this.responseCountry + data;
-    }
-
-    if(type == "zipcode") {
-      this.responseZipcode = this.responseZipcode + data;
-    }
-
-    if(type == "service") {
-      this.responseService = this.responseService + data;
-    }
-
-    if(type == "insurance") {
-      this.responseInsurance = this.responseInsurance + data;
-    }
+  replaceDynamicValue(map: any, data: any): any {
+    const value = map["questionnair"].replace(
+      /{([^{}]+)}/g,
+      (keyExpr: any, key: any) => {
+        return data[key] || "";
+      }
+    );
+    map["questionnair"] = value;
+    return map;
   }
 
   clear() {
-    this.responseCity = '';
-    this.responseCountry = '';
-    this.responseInsurance = '';
-    this.responseState = '';
-    this.responseService = '';
-    this.responseZipcode = '';
+    this.finalSubmitData = this.finalSubmitData.map((data) => {
+      data["alData"] = ''
+      return data;
+    });
   }
+
+  gotoQuestionnair() {
+    this.router.navigate(["questionnairs"])
+  }
+
+  // private callBackUpdateCity(data: any) {
+  //   this.response = this.response + data;
+  //   //More Logic and code here
+  // }
+
+  // clear() {
+  //   this.finalSubmitData = this.finalSubmitData.map((data) => {
+  //     data["alData"] = ''
+  //     return data;
+  //   });
+  // }
+
+  // callBackUpdateCity = (data: any, type: any) => {
+  //   this.loading = false;
+
+  //   if(type == "city") {
+  //     this.responseCity = this.responseCity + data;
+  //   }
+
+  //   if(type == "state") {
+  //     this.responseState = this.responseState + data;
+  //   }
+
+  //   if(type == "country") {
+  //     this.responseCountry = this.responseCountry + data;
+  //   }
+
+  //   if(type == "zipcode") {
+  //     this.responseZipcode = this.responseZipcode + data;
+  //   }
+
+  //   if(type == "service") {
+  //     this.responseService = this.responseService + data;
+  //   }
+
+  //   if(type == "insurance") {
+  //     this.responseInsurance = this.responseInsurance + data;
+  //   }
+  // }
+
+  // clear() {
+  //   this.responseCity = '';
+  //   this.responseCountry = '';
+  //   this.responseInsurance = '';
+  //   this.responseState = '';
+  //   this.responseService = '';
+  //   this.responseZipcode = '';
+  // }
 }

@@ -4,6 +4,7 @@ import { AlServiceService } from "./al-service.service";
 
 // @ts-ignore
 import * as oboe from "oboe";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-ai-integrator",
@@ -36,7 +37,8 @@ export class AiIntegratorComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private _alServiceService: AlServiceService
+    private _alServiceService: AlServiceService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -45,13 +47,28 @@ export class AiIntegratorComponent implements OnInit {
     console.log(this.formData);
 
     this.fg = this.fb.group({
-      questionnairs: this.fb.array([this.questionair()]),
+      questionnairs: this.fb.array([]),
     });
     this.getBusinessData();
+    this.getStoredTemplate();
+  }
+
+  getStoredTemplate() {
+    const data = localStorage.getItem("questionnairs");
+    this.finalSubmitData = JSON.parse(data ? data : "");
+    this.finalSubmitData.forEach(data => {
+      this.questionairFieldAsFormArray.push(this.questionairWithValue(data.questionnair));
+    })
   }
 
   get questionairFieldAsFormArray(): any {
     return this.fg.get("questionnairs") as FormArray;
+  }
+
+  questionairWithValue(value: any): any {
+    return this.fb.group({
+      questionnair: this.fb.control(value),
+    });
   }
 
   questionair(): any {
@@ -75,66 +92,12 @@ export class AiIntegratorComponent implements OnInit {
   }
 
   onSubmit() {
-    this.loading = true;
-    console.log(this.fg.value);
-    this.finalSubmitData = this.fg.value.questionnairs;
-    this.finalSubmitData = this.finalSubmitData.map((data) =>
-      this.replaceDynamicValue(data)
-    );
-    console.log(this.finalSubmitData);
-
-    this.finalSubmitData.forEach((data: any, index: any) => {
-      this._alServiceService.getAiStream(
-        data.questionnair,
-        this.callBackUpdate,
-        data.questionnair
-      );
-    });
-
-    // const keyword = this.searchKeyWords.filter((data: any) => data.key == this.fg.value.keyword)[0]["key"]
-    // const value = this.searchKeyWords.filter((data: any) => data.key == this.fg.value.keyword)[0]["value"]
-    // this.searchedTitle = this.fg.value.text+" "+value+this.businessData[keyword.split(".")[0]][keyword.split(".")[1]];
+    localStorage.setItem('questionnairs', JSON.stringify(this.fg.value.questionnairs));
+    this.router.navigate([''])
   }
 
-  callBackUpdate = (data: any, type: any) => {
-    this.loading = false;
-    this.updateArray(data, type);
-  };
-
-  updateArray(response: any, value: any) {
-    this.finalSubmitData = this.finalSubmitData.map((data) => {
-      if (data.questionnair == value) {
-        let exitsingData = data["alData"];
-        if(exitsingData) {
-          data["alData"] = exitsingData+response;
-        } else{
-          data["alData"] = response;
-        }
-      }
-      return data;
-    });
+  close() {
+    this.router.navigate([''])
   }
 
-  replaceDynamicValue(map: any): any {
-    const value = map["questionnair"].replace(
-      /{([^{}]+)}/g,
-      (keyExpr: any, key: any) => {
-        return this.formData[key] || "";
-      }
-    );
-    map["questionnair"] = value;
-    return map;
-  }
-
-  private callBackUpdateCity(data: any) {
-    this.response = this.response + data;
-    //More Logic and code here
-  }
-
-  clear() {
-    this.finalSubmitData = this.finalSubmitData.map((data) => {
-      data["alData"] = ''
-      return data;
-    });
-  }
 }

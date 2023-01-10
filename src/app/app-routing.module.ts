@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 
 const routes: Routes = [ 
   { path: '', component: AppComponent },
-  { path: 'ai-integrator', component: AiIntegratorComponent }
+  { path: 'questionnairs', component: AiIntegratorComponent }
 ];
 
 @NgModule({
