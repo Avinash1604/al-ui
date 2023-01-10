@@ -71,17 +71,17 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.fg = this.fb.group({
       address: this.fb.group({
-        lineOne: ['', Validators.required],
+        address: ['', Validators.required],
         city: ['', Validators.required],
         state: ['', Validators.required],
         country: ['', Validators.required],
         zipcode: ['', Validators.required]
       }),
       service: this.fb.group({
-        serviceName: ['', Validators.required],
+        service: ['', Validators.required],
       }),
       insurenceProviders: this.fb.group({
-        iProviders: ['', Validators.required],
+        insurance: ['', Validators.required],
       }),
     });
   }
@@ -128,198 +128,46 @@ export class AppComponent implements OnInit {
 
   onSubmit() {
      console.log(this.fg.value);
-     //this.alservice.setData(this.fg.value);
-    // this.router.navigate(["ai-integrator"]);
-    this.loading = true;
+     const data = Object.assign({}, this.fg.value.address, this.fg.value.service, this.fg.value.insurenceProviders)
+     localStorage.setItem('formData', JSON.stringify(data));
 
-    const title = "Tell me about "+this.fg.value.address.city
-    this.getCityOutput(title);
-
-    this.getStateOutput("Tell me about "+this.fg.value.address.state);
-
-    this.getCountryOutput( "Tell me about "+this.fg.value.address.country);
-
-    this.getZiocodeOutput( "Tell me about "+this.fg.value.address.zipcode);
-
-    this.getServiceOutput("Tell me about "+this.fg.value.service.serviceName);
-
-    this.getInsuranceOutput("Tell me about "+this.fg.value.insurenceProviders.iProviders);
-
-
+     this.router.navigate(["ai-integrator"])
+    // this.loading = true;
+    // const title = "Tell me about "+this.fg.value.address.city
+    // this.alServiceService.getAiStream(title, this.callBackUpdateCity, "city")
+    // this.alServiceService.getAiStream("Tell me about "+this.fg.value.address.state, this.callBackUpdateCity, "state")
+    // this.alServiceService.getAiStream( "Tell me about "+this.fg.value.address.country, this.callBackUpdateCity, "country")
+    // this.alServiceService.getAiStream( "Tell me about "+this.fg.value.address.zipcode, this.callBackUpdateCity, "zipcode")
+    // this.alServiceService.getAiStream( "Tell me about "+this.fg.value.service.service, this.callBackUpdateCity, "service")
+    // this.alServiceService.getAiStream( "Tell me about "+this.fg.value.insurenceProviders.insurance, this.callBackUpdateCity, "insurance")
   }
 
-  getCityOutput(searchedTitle: any) {
-    this.loading = true;
+  callBackUpdateCity = (data: any, type: any) => {
+    this.loading = false;
 
-    const data = {"text":searchedTitle}
-    var config = {
-      url: 'http://18.191.47.199:3000/ai/stream',
-      method: 'POST',
-      body: data,
-      cached: false,
-    };
-    const oboeService = oboe(config);
-    oboeService
-      .node('!', (data: any) => {
-        console.log(data);
-        this.responseCity = this.responseCity + data['data']?.replace(new RegExp('\n', 'g'), "<br />");
-      })
-      .done( (data: any) => {
-        console.log(data);
-      })
-      .fail( (data: any) => {
-       console.log(data);
-        this.loading = false;
-      });
-  }
+    if(type == "city") {
+      this.responseCity = this.responseCity + data;
+    }
 
-  getCountryOutput(searchedTitle: any) {
-    this.loadingCountry = true;
+    if(type == "state") {
+      this.responseState = this.responseState + data;
+    }
 
-    const data = {"text":searchedTitle}
-    var config = {
-      url: 'http://18.191.47.199:3000/ai/stream',
-      method: 'POST',
-      body: data,
-      cached: false,
-    };
-    const oboeService = oboe(config);
-    oboeService
-      .node('!', (data: any) => {
-        this.loadingCountry = false;
-        console.log(data);
-        this.responseCountry = this.responseCountry + data['data']?.replace(new RegExp('\n', 'g'), "<br />");
-      })
-      .done( (data: any) => {
-        console.log('-------------------DONE---------------------');
-        this.loadingCountry = false;
-        console.log(data);
-      })
-      .fail( (data: any) => {
-        console.log('-------------------FAIL---------------------');
-        console.log(data);
-        this.loadingCountry = false;
-      });
-  }
+    if(type == "country") {
+      this.responseCountry = this.responseCountry + data;
+    }
 
-  getZiocodeOutput(searchedTitle: any) {
-    this.loadingZipcode = true;
+    if(type == "zipcode") {
+      this.responseZipcode = this.responseZipcode + data;
+    }
 
-    const data = {"text":searchedTitle}
-    var config = {
-      url: 'http://18.191.47.199:3000/ai/stream',
-      method: 'POST',
-      body: data,
-      cached: false,
-    };
-    const oboeService = oboe(config);
-    oboeService
-      .node('!', (data: any) => {
-        this.loadingZipcode = false;
-        console.log(data);
-        this.responseZipcode = this.responseZipcode + data['data']?.replace(new RegExp('\n', 'g'), "<br />");
-      })
-      .done( (data: any) => {
-        console.log('-------------------DONE---------------------');
-        this.loadingZipcode = false;
-        console.log(data);
-      })
-      .fail( (data: any) => {
-        console.log('-------------------FAIL---------------------');
-        console.log(data);
-        this.loadingZipcode = false;
-      });
-  }
+    if(type == "service") {
+      this.responseService = this.responseService + data;
+    }
 
-
-  getStateOutput(searchedTitle: any) {
-    this.loadingState = true;
-
-    const data = {"text":searchedTitle}
-    var config = {
-      url: 'http://18.191.47.199:3000/ai/stream',
-      method: 'POST',
-      body: data,
-      cached: false,
-    };
-    const oboeService = oboe(config);
-    oboeService
-      .node('!', (data: any) => {
-        this.loadingState = false
-        console.log(data);
-        this.responseState = this.responseState + data['data']?.replace(new RegExp('\n', 'g'), "<br />");
-      })
-      .done( (data: any) => {
-        this.loadingState = false
-        console.log('-------------------DONE---------------------');
-        this.loading = false;
-        console.log(data);
-      })
-      .fail( (data: any) => {
-        this.loadingState = false
-        console.log('-------------------FAIL---------------------');
-        console.log(data);
-        this.loading = false;
-      });
-  }
-
-  getServiceOutput(searchedTitle: any) {
-    this.loadingService = true;
-
-    const data = {"text":searchedTitle}
-    var config = {
-      url: 'http://18.191.47.199:3000/ai/stream',
-      method: 'POST',
-      body: data,
-      cached: false,
-    };
-    const oboeService = oboe(config);
-    oboeService
-      .node('!', (data: any) => {
-        console.log(data);
-        this.loadingService = false;
-        this.responseService = this.responseService + data['data']?.replace(new RegExp('\n', 'g'), "<br />");
-      })
-      .done( (data: any) => {
-        console.log('-------------------DONE---------------------');
-        this.loadingService = false;
-        console.log(data);
-      })
-      .fail( (data: any) => {
-        console.log('-------------------FAIL---------------------');
-        console.log(data);
-        this.loadingService = false;
-      });
-  }
-
-
-  getInsuranceOutput(searchedTitle: any) {
-    this.loadingInsurance = true;
-
-    const data = {"text":searchedTitle}
-    var config = {
-      url: 'http://18.191.47.199:3000/ai/stream',
-      method: 'POST',
-      body: data,
-      cached: false,
-    };
-    const oboeService = oboe(config);
-    oboeService
-      .node('!', (data: any) => {
-        this.loadingInsurance = false;
-        console.log(data);
-        this.responseInsurance = this.responseInsurance + data['data']?.replace(new RegExp('\n', 'g'), "<br />");
-      })
-      .done( (data: any) => {
-        console.log('-------------------DONE---------------------');
-        this.loadingInsurance = false;
-        console.log(data);
-      })
-      .fail( (data: any) => {
-        console.log('-------------------FAIL---------------------');
-        console.log(data);
-        this.loadingInsurance = false;
-      });
+    if(type == "insurance") {
+      this.responseInsurance = this.responseInsurance + data;
+    }
   }
 
   clear() {
@@ -328,5 +176,6 @@ export class AppComponent implements OnInit {
     this.responseInsurance = '';
     this.responseState = '';
     this.responseService = '';
+    this.responseZipcode = '';
   }
 }

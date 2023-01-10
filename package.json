@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --base-href https://avinash1604.github.io/al-ui/",
+    "build": "ng build",
+    "build:github": "ng build --base-href https://avinash1604.github.io/al-ui/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

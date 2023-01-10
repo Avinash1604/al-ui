@@ -5629,6 +5629,10 @@
     bottom: 0;
     left: 0;
   }
+
+  .mr-5 {
+    margin-right: 20px;
+  }
   
   .inset-auto {
     top: auto;
@@ -7810,3 +7814,7 @@
      * @import "utilities/skew-transforms";
      */
    
+
+     .remove-btn {
+      margin-left: 10px;
+     }

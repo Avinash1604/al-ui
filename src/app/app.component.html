@@ -1,5 +1,4 @@
 <div class="px-10">
-  <h5 class="font-bold my-2">Details</h5>
   <form [formGroup]="fg" (ngSubmit)="onSubmit()">
     <div formGroupName="address" class="my-6">
       <h4 class="uppercase font-bold text-lg">Address</h4>
@@ -9,7 +8,7 @@
             <div class="pt-2 flex items-center">
               <input
                 type="text"
-                formControlName="lineOne"
+                formControlName="address"
                 class="border border-grey-600 w-full h-10 py-2 px-4 text-sm rounded"
                 placeholder="Enter address line one"
                 [ngClass]="{
@@ -110,7 +109,7 @@
           <div class="pt-2 flex items-center">
             <input
               type="text"
-              formControlName="serviceName"
+              formControlName="service"
               class="border border-grey-600 w-full h-10 py-2 px-4 text-sm rounded"
               placeholder="Service Name"
               [ngClass]="{
@@ -132,9 +131,9 @@
           <div class="pt-2 flex items-center">
             <input
               type="text"
-              formControlName="iProviders"
+              formControlName="insurance"
               class="border border-grey-600 w-full h-10 py-2 px-4 text-sm rounded"
-              placeholder="Insurance Providers"
+              placeholder="Insurance providers"
               [ngClass]="{
                 'border-red-800': message && message.iProvider
               }"
@@ -155,17 +154,16 @@
       >
         Submit
       </button>
+
       <div class="loader" *ngIf="loading"></div>
     </div>
   </form>
+  <button (click)="clear()" class="bg-blue-600 p-2 text-white rounded w-32" style="margin-top: 10px;">
+    Clear
+</button>
 </div>
 
 
-<div style="margin: 20px;">
-  <button style="width: 100px; height: 40px;" (click)="clear()" class="bg-blue-600 p-2 text-white rounded w-32">
-      Clear
-  </button>
-</div>
 <div style="border: 1px solid; margin: 20px;" *ngIf="responseCity" [innerHTML]="responseCity"></div>
 <div style="border: 1px solid; margin: 20px;" *ngIf="responseState" [innerHTML]="responseState"></div>
 <div style="border: 1px solid; margin: 20px;" *ngIf="responseCountry" [innerHTML]="responseCountry"></div>
