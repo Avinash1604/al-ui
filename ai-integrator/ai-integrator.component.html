@@ -1,51 +1,48 @@
 <div class="px-10">
-    <h2><b>Address</b></h2>
-    <div>{{businessData?.address?.city}}</div>
-    <div>{{businessData?.address?.state}}</div>
-    <div>{{businessData?.address?.country}}</div>
-    <div>{{businessData?.address?.zipcode}}</div>
-    <h2><b>Service</b></h2>
-    <div>{{businessData?.service?.serviceName}}</div>
-    <h2><b>Insurence Providers</b></h2>
-    <div>{{businessData?.insurenceProviders?.iProviders}}</div>
+    <h2><b> Questionnaires (address, city, state, country, zipcode, service, insurance)</b></h2>
 
-    <form [formGroup]="fg" (ngSubmit)="onSubmit()">
-        <h4 class="uppercase font-bold text-lg">Input</h4>
-        <div class="w-full">
-            <label Class="w-full text-md font-light">Searching About</label>
-            <div class="pt-2 flex items-center">
-                <select id="search" formControlName="keyword" style="border: 2px solid black;">
-                    <option *ngFor="let searchKeyWord of searchKeyWords" [ngValue]="searchKeyWord.key">{{
-                        searchKeyWord.value }}</option>
-                </select>
-            </div>
-        </div>
-        <div class="w-full">
-            <label Class="w-full text-md font-light">Input
-                <div class="pt-2 flex items-center">
-                    <input type="text" formControlName="text"
-                        class="border border-grey-600 w-full h-10 py-2 px-4 text-sm rounded" placeholder="text" />
+    <form [formGroup]="fg">
+        <div class="w-full" formArrayName="questionnairs"
+            *ngFor="let control of  questionairFieldAsFormArray.controls; let i = index;">
+            <label Class="w-full text-md font-light">
+                <div class="pt-2 flex items-center" [formGroupName]="i">
+                    <input type="text" formControlName="questionnair"
+                        class="border border-grey-600 h-10 py-2 px-4 text-sm rounded" style="width: 90%;"
+                        placeholder="text" />
+                    <button class="button remove-btn" type="button" (click)="removeField(i)">Remove</button>
                 </div>
             </label>
         </div>
-        <div class="mt-10">
-            <button type="submit" [ngClass]="{'opacity-50': !fg.valid }" class="bg-blue-600 p-2 text-white rounded w-32"
-                [disabled]="!fg.valid">
-                Submit
-            </button>
-            <div class="loader" *ngIf="loading"></div>
-        </div>
     </form>
+    <div Class="w-full text-md font-light" style="margin: 10px;">
+        Generate Plagiarism Free Content <input type="checkbox" [checked]="plagiarismChecked" (change)="onPlagiarismChange()" style="width: 20px; height: 20px;"/>
+    </div>
+    <div class="mt-10">
+        <button class="button" (click)="addControl()" class="bg-blue-600 p-2 text-white rounded w-32 mr-5"
+            style="width: 200px !important"> +
+            Questionnaire</button>
+        <button type="submit" [ngClass]="{'opacity-50': !fg.valid }"
+            class="bg-blue-600 p-2 text-white rounded w-32 mr-5" [disabled]="!fg.valid" (click)="onSubmit()">
+            Save
+        </button>
+        <button type="submit" [ngClass]="{'opacity-50': !fg.valid }" class="bg-blue-600 p-2 text-white rounded w-32"
+            [disabled]="!fg.valid" (click)="close()">
+            close
+        </button>
+        <div class="loader" *ngIf="loading"></div>
+    </div>
 
-    <div style="margin: 20px;" *ngIf="response">
-        <button style="width: 100px; height: 40px;" (click)="clear()" class="bg-blue-600 p-2 text-white rounded w-32">
+
+    <div style="margin-top: 20px;">
+        <!-- <button style="width: 100px; height: 40px;" (click)="clear()" class="bg-blue-600 p-2 text-white rounded w-32">
             Clear
         </button>
         <div style="margin: 10px;">
             <b>{{searchedTitle}}</b>
+        </div> -->
+    </div>
+    <div *ngFor="let data of finalSubmitData">
+        <div style="border: 1px solid; margin: 20px;" *ngIf="data?.alData" [innerHTML]="data?.alData">
         </div>
     </div>
-    <div style="border: 1px solid; margin: 20px;" *ngIf="response" [innerHTML]="response">
-    </div>
-
 </div>
